@@ -70,3 +70,35 @@ The trained maximum entropy classifier is then applied on the current dataset to
 Since the polite level is measured automatically, there could be some cascading errors from the training corpus (which is the least likely given the reliability of the corpus), training the classifier, or applying the trained classifier on the current data. In addition, there could still be some aspect of politeness that the trained classifier fails to capture. Therefore, direct mention, which is defined as when an utterance contains Discord’s mentioning users feature to mention the other user(s), is used as another proxy of an intention to communicate politely that does not suffer from possible cascading errors like the polite level does. Note that direct mention is not equivalent to a private chat between users. Similar to other social media and online community platforms, utterances contain Discord’s mentioning users feature are publicly accessible to all users.
 
 The logic behind using direct mention as a proxy of an intention to communicate politely comes from Brown and Levinson (1978)’s theory of politeness. The theory explains that all persons are concerned with their face and recognize that others also have face wants, and it is generally in everyone’s interests 8 to maintain each other’s face. The risk of failing to maintain the other’s face (or being not polite) is then highest when there is a particular other’s face to maintain. That is if a user produces a not so polite utterance without directly mentioning any other user, it is less clear whose face is not maintained and hence it is less likely that any other user’s face will not be maintained at all. On the other hand, if a user produces a not so polite utterance and directly mentions the other user(s), it is definite that the other user(s)’s face(s) will not be maintained. Hence, when there is a direct mention, the user should be more likely to communicate politely.
+
+## References
+
+   Penelope Brown and Stephen C Levinson. 1978. Universals in language usage: Politeness phenomena. In Questions and politeness: Strategies in social interaction, pages 56–311. Cambridge University Press.
+
+   Cristian Danescu-Niculescu-Mizil, Moritz Sudhof, Dan Jurafsky, Jure Leskovec, and Christopher Potts. 2013. A computational approach to politeness with application to social factors. arXiv preprint arXiv:1306.6078.
+
+   Erika Darics. 2012. Instant messaging in work-based virtual teams: the analysis of non-verbal communication used for the contextualisation of transactional and relational communicative goals. Ph.D. thesis, Loughborough University.
+
+   Lewis S Davis and Farangis Abdurazokzoda. 2016. Language, culture and institutions: Evidence from a new linguistic dataset. Journal of Comparative Economics, 44(3):541–561.
+
+   Dracovian. 2019. Dracovian/discord-scraper.
+
+   Eli Dresner and Susan C Herring. 2010. Functions of the nonverbal in cmc: Emoticons and illocutionary force. Communication theory, 20(3):249–268.
+
+   Matthew S. Dryer and Martin Haspelmath, editors. 2013. WALS Online. Max Planck Institute for Evolutionary Anthropology, Leipzig.
+
+   Sharath Chandra Guntuku, Mingyang Li, Louis Tay, and Lyle H Ungar. 2019. Studying cultural differences in emoji usage across the east and the west. In Proceedings of the International AAAI Conference on Web and Social Media, volume 13, pages 226–235.
+
+   Barry Kavanagh. 2016. Emoticons as a medium for channeling politeness within american and japanese online blogging communities. Language & Communication, 48:53–65.
+
+   Zuzana Komrsková. 2015. The use of emoticons in polite phrases of greetings and thanks. International Journal of Social, Behavioral, Educational, Economic, Business and Industrial Engineering, 9(4):1309–1312.
+
+   Agnese Sampietro. 2016. Exploring the punctuating effect of emoji in spanish whatsapp chats. Lenguas modernas, (47).
+
+   Agnese Sampietro. 2019. Emoji and rapport management in spanish whatsapp chats. Journal of Pragmatics, 143:109–120.
+
+   Karianne Skovholt, Anette Grønning, and Anne Kankaanranta. 2014. The communicative functions of emoticons in workplace e-mails::-. Journal of Computer-Mediated Communication, 19(4):780–797.
+
+   Ying Tang and Khe Foon Hew. 2019. Emoticon, emoji, and sticker use in computer-mediated communication: A review of theories and research findings. International Journal of Communication, 13:27.
+
+   Ilona Vandergriff. 2013. Emotive communication online: A contextual analysis of computer-mediated communication (cmc) cues. Journal of Pragmatics, 51:1–12.
