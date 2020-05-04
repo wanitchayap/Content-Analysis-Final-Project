@@ -3,14 +3,15 @@ Wanitchaya Poonpatanapricha
 
 ## Introduction
 
-Emoji, a form of ideograms, support computer-mediated communications (CMCs) in the same way nonverbal cues–such as facial expression, gesture, and tone of voice (Tang and Hew, 2019)–support face-to-face (FTF) communications. According to prior literature on emoticons (the predecessor of emoji), one way that emoji can support CMCs is to convey politeness. Since some languages have richer linguistic elements for politeness (e.g., honorifics in Japanese, sentence-final particles in Thai) than the others (e.g., English), it is possible that when a speaker whose primary language has richer elements for politeness needs to communicate politely through texts in foreign language with less rich elements for politeness, the speaker may resort to emoji due to the lack of linguistic elements for politeness as well as nonverbal cues to convey politeness as in FTF. This paper investigates such possibility by studying speakers with various primary languages communicating in English within an online community. The specific hypotheses are:
+Emoji, a form of ideograms, support computer-mediated communications (CMCs) in the same way nonverbal cues–such as facial expression, gesture, and tone of voice (Tang and Hew, 2019)–support face-to-face (FTF) communications. According to prior literature on emoticons (the predecessor of emoji), one way that emoji can support CMCs is to convey politeness. Since some languages have richer linguistic elements for politeness (e.g., honorifics in Japanese, sentence-final particles in Thai) than the others (e.g., English), it is possible that when a speaker whose primary language has richer elements for politeness needs to communicate politely through texts in foreign language with less rich elements for politeness, the speaker may resort to emoji due to the lack of linguistic elements for politeness as well as nonverbal cues to convey politeness as in FTF. This paper investigates such possibility by studying speakers with various primary languages communicating in English within an online community. The specific hypotheses are:  
 
 1. A speaker, regardless of one’s primary language, is more likely to use emoji when communicates politely than when does not. (This hypothesis serves a purpose of replicating prior results on politeness function of emoticons on emoji.)  
 2. A speaker whose primary language has richer elements for politeness is more likely to use emoji than a speaker whose primary language has less rich elements for politeness when communicates politely in English.
 
 ## Related Works
 
-A number of research have linked the use of emoticons–the predecessor of emoji–with politeness strategies.
+A number of research have linked the use of emoticons–the predecessor of emoji–with politeness strategies.  
+
 Sampietro (2016) proposed that one of the pragmatic function of emoticons was to mitigate possible face-threats. For example, emoticons were used with requests and orders to soften these speech acts (Dresner and Herring, 2010; Darics, 2012; Skovholt et al., 2014). Specifically, Darics (2012) found that emoticons were mainly used to mitigate or to clarify the message, usually to reach a successful cooperation. Here are two example sentences mitigated by emoticons from Dresner and Herring (2010):
 
 > I would like a noncircumventing solution ;->
@@ -18,23 +19,32 @@ Sampietro (2016) proposed that one of the pragmatic function of emoticons was to
 > I wonder if you could recommend me some good readings related to conversational data. We just collected some IM data and are about to conduct some analysis on it. Since I’ve never worked on this kind of data before, I am writing for some suggestions.:)
 
 Furthermore, Sampietro (2019) proposed that emoticons may contribute to politeness in CMCs. Specifically, Skovholt et al. (2014) found emoticons to be positive politeness markers and rapport building devices, and Vandergriff (2013) found emoticons to be mostly used in the service of politeness and to mitigate disagreement.
+
 One of this paper’s goal is to replicate these prior results on politeness function of emoticons on emoji.
+
 In terms of cross-language analysis, prior works have studied emoticon usages for politeness across different languages. Komrsková (2015) studied emoticons in Czech and English, and found that phrases of greeting and thanks were very often accompanied by emoticons in both languages. Kavanagh (2016) studied emoticon as a medium for channeling politeness within American and Japanese online blogging communities and found that Japanese used emoticons significantly more than Americans.
+
 In contrast to these works which investigated the use of emoticons for politeness in each speaker’s primary language, this paper investigates the use of emoji for politeness in a speaker, regardless of the speaker’s primary language, communicating in English.
 
 ## Method
 The goals of this paper are to replicate prior results on politeness function of emoticons on emoji and to investigate whether a speaker whose primary language has richer elements for politeness is more likely to use emoji than a speaker whose primary language less rich elements for politeness when communicates politely in English. To do so, an ideal dataset would be an English CMC that is a product of speakers with different primary languages where each speaker’s primary language as well as the intention to communicate politely are explicitly coded.
+
 In this paper, the next best ideal data is used because it is not feasible to conduct a controlled experiment. In particular, the ideal dataset is approximated from an English CMC where some speakers’ preferred languages other than English are known. The intention to communicate politely is approximated from how polite the utterance is as well as whether that utterance is a direct mention to another speaker. Lastly, each language’s degree of richness in polite elements is approximated from the politeness distinctions in pronouns feature from WALS (Dryer and Haspelmath, 2013).
+
 In terms of statistical test, logistic regression is used in a binary classification task predicting whether an utterance contain any emoji. Independent variables that are inputs of the logistic regression are a speaker’s primary language’s degree of richness in polite elements, how polite the utterance is, and whether the utterance is a direct mention to another speaker. In addition, according to Guntuku et al. (2019), there are some cultural differences in the use of emoji between the East and the West. Hence, a binary feature indicating whether the speaker’s primary language is from the East or the West is used as a control variable in the logistic regression.
 
 ### Data
+
 The data of an English CMC was obtained from the official Discord server of Tsuki Adventure, a free-to-play mobile game. Discord is a proprietary freeware VoIP application and digital distribution platform designed for video gaming communities that specializes in text, image, video and audio communication between users in a chat.
+
 What is special about Tsuki Adventure Discord is that each user in the community is asked to tag the user profile with what language other than English the user prefers to communicate in. Although the preferred language tag is not mandatory, there is a significant number of the users in this community that do so. Hence, there is sufficient data to investigate the research questions. Nevertheless, using this data requires a strong assumption that the language tagged is the primary language of that user. If this assumption is not true, the results from testing the second hypothesis should be more conservative. Hence, this assumption should make it harder to get significant results. Also note that testing the 4 first hypothesis doesn’t require the user’s primary language, while testing the second hypothesis requires one. Therefore, all utterances are used in testing the first hypothesis, while only utterances from users with language tags are used in testing the second hypothesis.
+
 In term of the data collection, the data was scraped from the official discord server of Tsuki Adventure on 02/21/2020 using a Python Discord scraper from Dracovian (2019). The total number of scraped utterances was 3,371, of which 1,622 utterances came from users with language tags. There were 12 different languages being tagged: 7 are Eastern languages (Bahasa, Chinese, Japanese, Korean, Tagalog, Thai, and Vietnamese) and 5 are Western languages (French, German, Portuguese, Russian, and Spanish).
 
 ### Approximating a language’s degree of richness in polite elements via WALS’ politeness distinctions in pronouns
 
 Politeness distinctions in pronouns feature from WALS (Dryer and Haspelmath, 2013)–The World Atlas of Language Structures–is used as a proxy for each language’s degree of richness in polite elements. This feature has been used in some prior social science research. For example, Davis and Abdurazokzoda (2016) studied relationship between politeness distinctions and egalitarianism, and found that this politeness distinctions feature from WALS was more reliable than the others.
+
 The scope of this feature is restricted to politeness distinctions in second person pronouns. Below are the 4 categories of this politeness distinctions in pronouns feature with corresponding descriptions from WALS and Davis and Abdurazokzoda (2016):
 
 1. No politeness distinctions - Languages that were assigned this value have no personal pronouns in their paradigms which are used to express different degrees of respect or intimacy toward the addressee. For example, there is no politeness distinction in English, in which “you” is used for both formal and familiar forms of address.  
