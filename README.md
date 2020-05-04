@@ -1,7 +1,5 @@
-# Computational Content Analysis Spring 2020 - Final Project
-Wanitchaya Poonpatanapricha
-
 # Politeness Function of Emoji in CMCs
+Wanitchaya Poonpatanapricha
 
 ## Introduction
 
