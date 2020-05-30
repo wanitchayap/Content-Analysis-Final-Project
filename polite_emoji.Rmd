@@ -1,0 +1,336 @@
+---
+title: "Politeness Function of Emoji and Emoticons in CMCs"
+author: "Wanitchaya Poonpatanapricha"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(MASS)
+library(tidyverse)
+library(ggthemr)
+ggthemr("light")
+```
+
+## Load Data
+```{r}
+# load data with processed text, language tag, and classified polite level
+df1 <- read_csv('tsuki_polite5.csv') %>%
+  select(-X1)%>%
+  drop_na(text, is_emoji) %>%
+  # create the direct mention feature
+  mutate(reply = ifelse(str_detect(text, "<user_mention>"), 1, 0)) %>%
+  # create the controling variable for eastern/western
+  mutate(east = ifelse(language %in% c("es", "en", "de", "pt", "ru", "fr"),     
+                       0, 1)) %>%
+  # change types of variables
+  mutate(is_emoji = ifelse(is_emoji, 1, 0),
+         is_emoji = as.factor(is_emoji),
+         east = as.factor(east),
+         reply = as.factor(reply))
+
+# load WALS' pronoun distinctions
+polite <- read_csv('polite_language.csv')
+
+# merge the 2 data for hypothesis 2
+rf_data <- inner_join(df1, polite) %>%
+  # remove text with English language tag (originally no tag)
+  filter(language != 'en') %>%
+  dplyr::select(-emoji, -language) %>%
+  drop_na() %>%
+  # combine multiple and binary pronoun distinctions + renumber polite level
+  mutate(polite_class = ifelse(polite_class %in% c("Multiple", "Binary"), 0, 1),
+         polite_class = as.factor(polite_class),
+         polite = polite_5 - 2) %>%
+  # remove repeated observations
+  distinct() %>%
+  dplyr::select(-text)
+
+# another data for hypothesis 1 (with texts without language tags)
+data <- inner_join(df1, polite) %>%
+  dplyr::select(-emoji, -language) %>%
+  drop_na() %>%
+  mutate(polite_class = ifelse(polite_class %in% c("Multiple", "Binary"), 0, 1),
+         polite_class = as.factor(polite_class),
+         polite = polite_5 -2) %>%
+  distinct()
+
+# data for only texts without language tags
+en_data <- inner_join(df1, polite) %>%
+  filter(language == 'en') %>% #, 
+  dplyr::select(-emoji, -language) %>%
+  drop_na() %>%
+  mutate(polite_class = ifelse(polite_class %in% c("Multiple", "Binary"), 0, 1),
+         polite_class = as.factor(polite_class),
+         polite = polite_5 -2) %>%
+  distinct() %>%
+  dplyr::select(-text)
+```
+
+## Sanity check
+### Between tagged and non-tagged utterances
+```{r}
+# number of utterances with emoji
+t.test(as.numeric(rf_data$is_emoji)-1, as.numeric(en_data$is_emoji)-1)
+sd(as.numeric(rf_data$is_emoji)-1)
+sd(as.numeric(en_data$is_emoji)-1)
+
+# polite level
+t.test(rf_data$polite, en_data$polite)
+sd(rf_data$polite)
+sd(en_data$polite)
+
+# direct mention
+t.test(as.numeric(rf_data$reply)-1, as.numeric(en_data$reply)-1)
+sd(as.numeric(rf_data$reply)-1)
+sd(as.numeric(en_data$reply)-1)
+```
+
+### Between binary/multiple pronoun distinctions and pronoun avoidance
+```{r}
+# binary/multiple pronoun distinctions
+binary <- rf_data %>% filter(polite_class == "0")
+# pronoun avoidance
+avoid <- rf_data %>% filter(polite_class == "1")
+
+# polite level
+t.test(binary$polite, avoid$polite)
+sd(binary$polite)
+sd(avoid$polite)
+
+# direct mention
+t.test(as.numeric(binary$reply)-1, as.numeric(avoid$reply)-1)
+sd(as.numeric(binary$reply)-1)
+sd(as.numeric(avoid$reply)-1)
+```
+
+## Hypothesis 1
+### `is_emoji` proportion by polite level and direct reply
+```{r}
+data %>% 
+  group_by(polite, reply, is_emoji) %>%
+  summarise(n = n()) %>% 
+  spread(key = is_emoji, value = n) %>%
+  mutate(p = `1`/(`0` + `1`)) %>%
+  select(polite, reply, p) %>%
+  spread(key = reply, value = p) 
+```
+
+### fitting logistic regression
+```{r}
+# without interaction term
+summary(glm(is_emoji ~ polite+reply, data = data, family = binomial))
+
+# with interaction term
+summary(glm(is_emoji ~ polite*reply, data = data, family = binomial))
+```
+
+## Hypothesis 2
+### fitting logistic regression
+```{r}
+# full model with up to 3-way interaction and controling variable
+full.model <- glm(is_emoji ~ polite_class * reply * polite + east, 
+                  data = rf_data, family = binomial)
+summary(full.model)
+
+# stepwise variable selection
+step.model <- full.model %>% stepAIC(trace = FALSE)
+summary(step.model)
+```
+
+### t-test after simplify polite level
+```{r}
+# t-test between pronoun distinctions when it is direct mention and 
+# utterance is more polite than average
+A <- rf_data %>%
+  mutate(is_emoji = as.numeric(is_emoji) - 1,
+         polite = ifelse(polite >= 1, 2, 1)) %>%
+  filter(polite == 2,
+         polite_class == "1",
+         reply == "1")
+
+B <- rf_data %>%
+  mutate(is_emoji = as.numeric(is_emoji) - 1,
+         polite = ifelse(polite >= 1, 2, 1)) %>%
+  filter(polite == 2,
+         polite_class == "0",
+         reply == "1")
+
+t.test(A$is_emoji, B$is_emoji)
+sd(A$is_emoji)
+sd(B$is_emoji)
+
+# plot
+rf_data %>%
+  mutate(is_emoji = as.numeric(is_emoji) - 1,
+         # simplify polite level
+         polite = ifelse(polite >= 1, "> Average", "<= Average"),
+         reply = ifelse(reply == "0", "Not Direct Mention", "Direct Mention")) %>%
+  group_by(reply, polite_class, polite) %>%
+  # calculate important statistics
+  summarise(mean = mean(is_emoji),
+            n = n(), 
+            sd = (mean*(1-mean)/n)^0.5,
+            # 95% confidence interval
+            se = 1.96 * sd) %>%
+  # plot filling by pronoun distinction
+  ggplot(aes(polite, mean, fill = polite_class)) + 
+  geom_col(position = "dodge") +
+  # error bar by 95% confidence interval
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), 
+                width=0.2, position = position_dodge(width = 0.9), size = 0.7,
+                color = "darkred") +
+  # facet by direct mention
+  facet_grid(~reply) +
+  labs(y = "Proportion of Utterances with Emoji",
+       x = "Polite Level") +
+  scale_fill_discrete(name = "Polite Distinctions", 
+                      labels = c("Binary/Multiple Politeness Distinctions", 
+                                 "Pronoun Avoidance")) +
+  theme(legend.position = "bottom",
+        legend.title = element_blank())
+```
+
+## Combining emoji and emoticons (post-hoc)
+```{r}
+# load data with processed text, language tag, and classified polite level
+df1 <- read_csv('tsuki_polite5_emoticon.csv') %>%
+  select(-X1)%>%
+  drop_na(text, is_emoji) %>%
+  # create the direct mention feature
+  mutate(reply = ifelse(str_detect(text, "<user_mention>"), 1, 0)) %>%
+  # create the controling variable for eastern/western
+  mutate(east = ifelse(language %in% c("es", "en", "de", "pt", "ru", "fr"),     
+                       0, 1)) %>%
+  # change types of variables
+  mutate(is_emoji = ifelse(is_emoji, 1, 0),
+         is_emoji = as.factor(is_emoji),
+         east = as.factor(east),
+         reply = as.factor(reply))
+
+# load WALS' pronoun distinctions
+polite <- read_csv('polite_language.csv')
+
+# merge the 2 data for hypothesis 2
+rf_data <- inner_join(df1, polite) %>%
+  # remove text with English language tag (originally no tag)
+  filter(language != 'en') %>%
+  dplyr::select(-emoji, -language) %>%
+  drop_na() %>%
+  # combine multiple and binary pronoun distinctions + renumber polite level
+  mutate(polite_class = ifelse(polite_class %in% c("Multiple", "Binary"), 0, 1),
+         polite_class = as.factor(polite_class),
+         polite = polite_5 - 2) %>%
+  # remove repeated observations
+  distinct() %>%
+  dplyr::select(-text)
+
+# another data for hypothesis 1 (with texts without language tags)
+data <- inner_join(df1, polite) %>%
+  dplyr::select(-emoji, -language) %>%
+  drop_na() %>%
+  mutate(polite_class = ifelse(polite_class %in% c("Multiple", "Binary"), 0, 1),
+         polite_class = as.factor(polite_class),
+         polite = polite_5 -2) %>%
+  distinct()
+```
+
+### fitting logistic regression for hypothesis 1
+```{r}
+# without interaction term
+summary(glm(is_emoji ~ polite+reply, data = data, family = binomial))
+
+# with interaction term
+summary(glm(is_emoji ~ polite*reply, data = data, family = binomial))
+```
+
+### fitting logistic regression for hypothesis 2
+```{r}
+# full model with up to 3-way interaction and controling variable
+full.model <- glm(is_emoji ~ polite_class * reply * polite + east, 
+                  data = rf_data, family = binomial)
+summary(full.model)
+
+# stepwise variable selection
+step.model <- full.model %>% stepAIC(trace = FALSE)
+summary(step.model)
+```
+
+### t-test after simplify polite level for hypothesis 2
+```{r}
+# t-test between pronoun distinctions when it is direct mention and 
+# utterance is more polite than average
+A <- rf_data %>%
+  mutate(is_emoji = as.numeric(is_emoji) - 1,
+         polite = ifelse(polite >= 1, 2, 1)) %>%
+  filter(polite == 2,
+         polite_class == "1",
+         reply == "1")
+
+B <- rf_data %>%
+  mutate(is_emoji = as.numeric(is_emoji) - 1,
+         polite = ifelse(polite >= 1, 2, 1)) %>%
+  filter(polite == 2,
+         polite_class == "0",
+         reply == "1")
+
+t.test(A$is_emoji, B$is_emoji)
+sd(A$is_emoji)
+sd(B$is_emoji)
+```
+
+## Listener model
+```{r}
+df1 <- read_csv('tsuki_polite5_listener.csv') %>%
+  select(-X1)%>%
+  drop_na(text, is_emoji) %>%
+  # create the direct mention feature
+  mutate(reply = ifelse(str_detect(text, "<user_mention>"), 1, 0)) %>%
+  # create the controling variable for eastern/western
+  mutate(east = ifelse(language %in% c("es", "en", "de", "pt", "ru", "fr"),     
+                       0, 1)) %>%
+  # change types of variables
+  mutate(is_emoji = ifelse(is_emoji, 1, 0),
+         is_emoji = as.factor(is_emoji),
+         east = as.factor(east),
+         reply = as.factor(reply))
+
+# load WALS' pronoun distinctions
+polite <- read_csv('polite_language.csv')
+
+# merge the 2 data for hypothesis 2
+rf_data <- inner_join(df1, polite) %>%
+  # remove text with English language tag (originally no tag)
+  filter(language != 'en') %>%
+  dplyr::select(-emoji, -language) %>%
+  drop_na() %>%
+  # combine multiple and binary pronoun distinctions + renumber polite level
+  mutate(polite_class = ifelse(polite_class %in% c("Multiple", "Binary"), 0, 1),
+         polite_class = as.factor(polite_class),
+         polite = polite_5 - 2) %>%
+  # remove repeated observations
+  distinct() %>%
+  dplyr::select(-text)
+
+listen <- rf_data %>%
+  mutate(is_emoji = as.numeric(is_emoji) - 1,
+         # simplify polite level
+         polite = ifelse(polite >= 1, 1, 0),
+         polite = as.factor(polite))
+```
+
+```{r}
+listener <- glm(data = listen, polite ~ is_emoji + reply + polite_class, 
+            family = binomial)
+summary(listener)
+
+# accuracy for baseline model that always predict more polite than average
+mean(as.numeric(listen$polite)-1)
+
+listen <- listen %>% 
+  mutate(pred = predict(listener, newdata = listen, type = "response"),
+         pred = ifelse(pred >= 0.5, 1, 0))
+
+# accuracy for the listener model
+mean((as.numeric(listen$polite)-1 == listen$pred))
+```
