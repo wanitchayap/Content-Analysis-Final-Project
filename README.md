@@ -26,5 +26,6 @@ provided in the repository.
 Techniques used in this project are from:
 * *Week 0* - scraping emoticons from Wikipedia  
 * *Week 1* - processing texts and counting  
-* *Week 3* - supervised classification  
+* *Week 3* - supervised classification    
+
 Even though the techniques used in this project are considered simple, I believe they are the most suitable for and sufficient to answer my research question.
