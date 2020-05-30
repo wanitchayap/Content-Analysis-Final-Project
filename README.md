@@ -24,8 +24,8 @@ provided in the repository.
 
 ### Note for Computational Content Analysis course
 Techniques used in this project are from:
-* *Week 0* - scraping emoticons from Wikipedia  
-* *Week 1* - processing texts and counting  
-* *Week 3* - supervised classification    
+* *Week 0* - scraping data from the Discord (using [Discord scraper](https://github.com/Dracovian/Discord-Scraper)) and emoticons from Wikipedia  
+* *Week 1* - processing texts and simple counting  
+* *Week 3* - supervised classification (logistic regression and maximum entropy)   
 
-Even though the techniques used in this project are considered simple, I believe they are the most suitable for and sufficient to answer my research question.
+Even though the techniques used in this project are considered simple, I believe they are the most suitable for and sufficient to answer my research question. With more complicated methods, the results may be obscure and cannot be clearly interpreted as when using these simple methods.
