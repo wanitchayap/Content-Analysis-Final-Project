@@ -14,11 +14,17 @@ which suggests that the presence emoji or emoticons may increase the likelihood 
 utterance as more polite.
 
 ### Full paper
-1. [ACL format] ()
-2. [Double-spaced format] ()
+1. [ACL format](https://github.com/wanitchayap/Content-Analysis-Final-Project/blob/master/Emoji_is_the_new_Politeness_formatted.pdf)
+2. [Double-spaced format](https://github.com/wanitchayap/Content-Analysis-Final-Project/blob/master/Emoji_is_the_new_Politeness_double.pdf)
 
 ### Reproducing this project
 1. Clean and process the data using [this jupyter notebook](https://github.com/wanitchayap/Content-Analysis-Final-Project/blob/master/polite_emoji.ipynb). If you want to skip this process, the cleaned and processed files are also 
 provided in the repository.
 2. Analyze the data using this [R code](https://github.com/wanitchayap/Content-Analysis-Final-Project/blob/master/polite_emoji.Rmd) ([rendered version](https://github.com/wanitchayap/Content-Analysis-Final-Project/blob/master/polite_emoji.md))
 
+### Note for Computational Content Analysis course
+Techniques used in this project are from:
+* *Week 0* - scraping emoticons from Wikipedia  
+* *Week 1* - processing texts and counting  
+* *Week 3* - supervised classification  
+Even though the techniques used in this project are considered simple, I believe they are the most suitable for and sufficient to answer my research question.
