@@ -1,5 +1,8 @@
-## Emoji is the New Politeness:Primary Language’s Richness of Polite Elements in Relation to Emoji Use to Communicate Politely in English
-Wanitchaya Poonpatanapricha
+## Emoji is the New Politeness: Primary Language’s Richness of Polite Elements in Relation to Emoji Use to Communicate Politely in English
+
+Wanitchaya Poonpatanapricha  
+University of Chicago  
+wanitchaya@uchicago.edu
 
 > Investigating the computer-mediated communications (CMCs) in an online
 community that specialized in communications for gamers, this paper successfully replicates the
